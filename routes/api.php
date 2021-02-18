@@ -23,13 +23,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('api/login', [TestController::class, 'apiLogin']);
 
 Route::group(['middleware'  => ['auth:api', 'admin']], function (){
-    Route::post('update-test/{id}', [TestController::class, 'updateTest']);
-    Route::delete('delete-test/{id}', [TestController::class, 'deleteTest']);
 
 });
 
 Route::get('list-test', [TestController::class, 'listTest']);
 Route::post('create-test', [TestController::class, 'createTest']);
-
+Route::post('update-test/{id}', [TestController::class, 'updateTest']);
+Route::get('list-one-test/{id}', [TestController::class, 'listOneTest']);
+Route::delete('delete-test/{id}', [TestController::class, 'deleteTest']);
 
 

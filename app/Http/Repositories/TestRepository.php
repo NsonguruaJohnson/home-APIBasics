@@ -11,21 +11,29 @@ class TestRepository {
         $this->testModel = $testModel;
     }
 
-    public function createTest(array $request){
-        $data = (object) $request;
+    public function createTest($request){
+        // dd($request);
+        // $data = (object) $request;
         $test = $this->testModel->create([
-            'name' => $data->name,
-            'description' => $data->description
+            'name' => $request['name'],
+            'description' => $request['description']
         ]);
 
         if(!$test){
-            $status_code = 422;
             return [
-                'status_code' => $status_code,
-                'message' => 'Invalid details'
+                    'status' => 'Error', 
+                    'status_code' => 422, 
+                    'message' => 'Invalid details'
+                ];
+            
+        } else {
+            return [
+                'status' => 'Success',
+                'status_code' => 201, 
+                'message' => 'Record Created'
             ];
         }
-        return $test;
+        
 
     }
 
@@ -33,20 +41,59 @@ class TestRepository {
         return $this->testModel->orderBy('name', 'ASC')->paginate();
     }
 
-    // public function updateTest($request, $id){
-    //     $test = $this->testModel->findorFail($id);
-    //     $test = $this->testModel->update([
-    //         'name' => $data->name,
-    //         'description' => $data->description
-    //     ]);
+    public function updateTest($request, $id){
+        $test = $this->testModel->findorFail($id);
+        $test = $test->update([
+            'name' => $request['name'],
+            'description' => $request['description']
+        ]);
         
-    //     if(!$test){
-    //         return [
-    //             'status_code' => 422,
-    //             'message' => 'Invalid details'
-    //         ];
-    //     }
-    //     return $test;
+        if(!$test){
+            return [
+                'status' => 'Error',
+                'status_code' => 404, 
+                'message' => 'Record Not Found'
+            ];
+        } else {
+            return [
+                'status' => 'Updated',
+                'status_code' => 200, 
+                'message' => 'Record Updated'
+            ];
+        }
 
-    // }
+    }
+
+    public function listOneTest($id){
+        if ($this->testModel->where('id', $id)->exists()){
+            return [
+                'status' => 'Success',
+                'status_code' => 200,
+                'message' => $this->testModel->where('id', $id)->get()
+            ];
+        } else {
+            return [
+                'status' => 'Error',
+                'status_code' => 404,
+                'message' => 'Record not found'
+            ];
+        }       
+    }
+
+    public function deleteTest($id){
+        if ($this->testModel->where('id', $id)->exists()){
+            $this->testModel->find($id)->delete();
+            return [
+                'status' => 'Success',
+                'status_code' => 200,
+                'message' => 'Record deleted'    
+            ];
+        } else {
+            return [
+                'status' => 'Error',
+                'status_code' => 404,
+                'message' => 'Record not found'
+            ];
+        }
+    }
 }

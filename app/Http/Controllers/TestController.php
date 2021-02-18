@@ -21,55 +21,37 @@ class TestController extends Controller
     }
 
     public function createTest(Request $request){ #Passing an object into a function is dependency injection or type inting
-        # Method 1(Bad method)
         # Every request is an array
-        // return Test::create($request->all());
         $this->validate($request, [
             'name' => 'required',
             'description' => 'required'
         ]);
-        $data = $this->testRepository->createTest($request->all());
-        if (!isset($data['status_code'])){
-            return $this->success($data);
-        }
-        return $this->error($data,  $status_code);
+        $data = $this->testRepository->createTest($request->only('name', 'description'));
+        // dd($request);
+        return $this->message($data);
 
-        # Method 2
-        // $data = (object) $request;
-        // $test = Test::create([
-        //     'name' => $data->name,
-        //     'description' => $data->description,
-        // ]);
-        // if (!$test) {
-        //     return [
-        //         'status' => 442,
-        //         'message' => 'Invalid inputs'
-        //     ];
-        // }
+    }
 
-        # Method 3
-        // $test = new Test();
-        // $test->name = $request->name;
-        // $test->description = $request->description;
-        // $test->save();
-        // return $test;
+    public function listOneTest($id){
+        $data = $this->testRepository->listOneTest($id);
+        return $this->message($data);
+        
     }
 
     public function updateTest(Request $request, $id){
-        # Start
-        // $this->validate($request, [
-        //     'name' => 'required',
-        //     'description' => 'required'
-        // ]);
-        // $data = $this->testRepository->updateTest($id);
-        #End
-        $test = Test::findOrFail($id);
-        $test->update($request->all());
-        return $test;
+        $this->validate($request, [
+            'name' => 'required',
+            'description' => 'required'
+        ]);
+        $data = $this->testRepository->updateTest($request->only('name', 'description'), $id);
+
+        return $this->message($data);
     }
 
     public function deleteTest($id){
-        return Test::find($id)->delete();
+        $data = $this->testRepository->deleteTest($id);
+        return $this->message($data);
+        // return Test::find($id)->delete();
     }
 
     public function apiLogin(Request $request){
