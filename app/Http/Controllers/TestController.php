@@ -32,7 +32,7 @@ class TestController extends Controller
         if (!isset($data['status_code'])){
             return $this->success($data);
         }
-        return $this->error($data, 422);
+        return $this->error($data,  $status_code);
 
         # Method 2
         // $data = (object) $request;

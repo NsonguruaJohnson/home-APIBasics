@@ -19,8 +19,9 @@ class TestRepository {
         ]);
 
         if(!$test){
+            $status_code = 422;
             return [
-                'status_code' => 422,
+                'status_code' => $status_code,
                 'message' => 'Invalid details'
             ];
         }

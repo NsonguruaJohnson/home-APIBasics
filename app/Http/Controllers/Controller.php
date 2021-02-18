@@ -18,14 +18,14 @@ class Controller extends BaseController
         ]);
     }
 
-    public function error($data, $code = null){
-        if (!$code || is_string($code)){
-            $code = 422;
-        }
+    public function error($data, $status_code){
+        // if (!$code || is_string($code)){
+        //     $code = 422;
+        // }
 
         return response()->json([
             'status' => 'error',
             'message' => $data
-        ], $code);
+        ], $status_code);
     }
 }
