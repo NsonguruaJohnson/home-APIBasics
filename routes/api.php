@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\CourseController;
+use Dingo\Api\Routing\Router;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +16,25 @@ use App\Http\Controllers\TestController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+$api = app('Dingo\Api\Routing\Router');
+
+$api->version('v1', function ($api){
+    // $groupOptions = [
+    //     'namespace' => 'App\Http\Controllers',
+    //     'prefix' => '',
+    // ];
+
+    // $api->group($groupOptions, function() use ($api){
+
+        $api->get('/courses/list', [CourseController::class, 'list']);
+        $api->post('/courses/create', [CourseController::class, 'create']);
+        $api->post('/courses/update/{id}', [CourseController::class, 'update']);
+        $api->get('/courses/get-course/{id}', [CourseController::class, 'getOneCourse']);
+        $api->delete('/courses/delete/{id}', [CourseController::class, 'deleteCourse']);
+
+    });
+// });
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
